@@ -1,0 +1,29 @@
+{
+  "name": "egghead-angularjs-from-scratch-getting-started",
+  "homepage": "https://github.com/eggheadio/egghead-angularjs-from-scratch-getting-started",
+  "authors": [
+    "Tali Walt <taliwalt@gmail.com>"
+  ],
+  "description": "bookmarking app",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "bookmarks"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-ui-router": "~0.2.15",
+    "lodash": "~3.10.1"
+  }
+}
