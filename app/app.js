@@ -50,6 +50,8 @@ angular.module ( 'Taggly', [] )
     function startCreating() {
         $scope.isCreating = true;
         $scope.isEditing = false;
+
+        resetCreateForm()
     }
 
     //if the user cancels the "add new bookmark" action, the isCreating property is set to false opening up the ability to edit a bookmark
@@ -82,4 +84,21 @@ angular.module ( 'Taggly', [] )
     $scope.startEditing = startEditing;
     $scope.cancelEditing = cancelEditing;
 
+    function resetCreateForm() {
+        $scope.newBookmark = {
+            title: '',
+            url: '',
+            category: $scope.currentCategory.name
+        };
+    }
+    //-------------------------------------------------------------------------------------------------
+    // CRUD
+    //-------------------------------------------------------------------------------------------------
+    function createBookmark(bookmark) {
+        bookmark.id = $scope.bookmarks.length;
+        $scope.bookmarks.push(bookmark);
+
+        resetCreateForm();
+    }
+    $scope.createBookmark = createBookmark;
 } )
