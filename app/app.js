@@ -26,9 +26,60 @@ angular.module ( 'Taggly', [] )
     }
     function setCurrentCategory ( category ){
         $scope.currentCategory = category
+        cancelCreating()
+        cancelEditing()
     }
 
     $scope.isCurrentCategory = isCurrentCategory
     $scope.setCurrentCategory = setCurrentCategory
+
+    //-------------------------------------------------------------------------------------------------
+    // CREATING AND EDITING STATES
+    //  we don't want the user to be able to create and edit a bookmart simultaneously, so the following methods and properties are set up to ensure a distinct separation between those two states
+    //-------------------------------------------------------------------------------------------------
+
+    //default states
+    $scope.isCreating = false;
+    $scope.isEditing = false;
+    //only show the "create new bookmark" button if the user is inside a category view, and if the edit-bookmark view is not visible.
+    function shouldShowCreating() {
+        return $scope.currentCategory && !$scope.isEditing;
+    }
+
+    //when the user clicks the "new bookmark button" the is creating property is set to true, and the is editing property is set to false
+    function startCreating() {
+        $scope.isCreating = true;
+        $scope.isEditing = false;
+    }
+
+    //if the user cancels the "add new bookmark" action, the isCreating property is set to false opening up the ability to edit a bookmark
+    function cancelCreating() {
+        $scope.isCreating = false;
+    }
+
+
+    function shouldShowEditing() {
+        return $scope.isEditing && !$scope.isCreating;
+    }
+
+    //when the user clicks the "edit bookmark" icon the isCreating property is set to false, and the is editing property is set to true
+    function startEditing() {
+        $scope.isCreating = false;
+        $scope.isEditing = true;
+    }
+
+    //if a user cancels the edit-bookmark action...
+    function cancelEditing() {
+        $scope.isEditing = false;
+        $scope.editedBookmark = null;
+    }
+
+    //make the above properties available to the view
+    $scope.shouldShowCreating = shouldShowCreating;
+    $scope.startCreating = startCreating;
+    $scope.cancelCreating = cancelCreating;
+    $scope.shouldShowEditing = shouldShowEditing;
+    $scope.startEditing = startEditing;
+    $scope.cancelEditing = cancelEditing;
 
 } )
