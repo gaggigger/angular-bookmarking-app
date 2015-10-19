@@ -6,7 +6,6 @@ angular.module ( 'Taggly', [] )
         { "id": 2, "name": "Exercise" },
         { "id": 3, "name": "Humor" }
     ];
-
     $scope.bookmarks       = [
         { "id": 0, "title": "AngularJS", "url": "http://angularjs.org", "category": "Development" },
         { "id": 1, "title": "Egghead.io", "url": "http://egghead.io", "category": "Development" },
@@ -19,7 +18,11 @@ angular.module ( 'Taggly', [] )
         { "id": 8, "title": "Dump", "url": "http://dump.com", "category": "Humor" }
     ]
 
+    //default states
+    $scope.isCreating = false;
+    $scope.isEditing = false;
     $scope.currentCategory = null
+    $scope.editedBookmark = null
 
     function isCurrentCategory ( category ){
         return $scope.CurrentCategory !== null && category.name === $scope.currentCategory.name
@@ -33,20 +36,36 @@ angular.module ( 'Taggly', [] )
     $scope.isCurrentCategory = isCurrentCategory
     $scope.setCurrentCategory = setCurrentCategory
 
+    function setEditedBookmark(bookmark){
+        $scope.editedBookmark = angular.copy(bookmark)
+    }
+
+    function isSelectedBookmark(bookmarkId) {
+        return $scope.editedBookmark !== null && $scope.editedBookmark.id === bookmarkId;
+    }
+
+    $scope.setEditedBookmark = setEditedBookmark
+    $scope.isSelectedBookmark = isSelectedBookmark;
+
+    function resetCreateForm() {
+        $scope.newBookmark = {
+            title: '',
+            url: '',
+            category: $scope.currentCategory.name
+        };
+    }
     //-------------------------------------------------------------------------------------------------
     // CREATING AND EDITING STATES
     //  we don't want the user to be able to create and edit a bookmart simultaneously, so the following methods and properties are set up to ensure a distinct separation between those two states
     //-------------------------------------------------------------------------------------------------
 
-    //default states
-    $scope.isCreating = false;
-    $scope.isEditing = false;
+
     //only show the "create new bookmark" button if the user is inside a category view, and if the edit-bookmark view is not visible.
     function shouldShowCreating() {
         return $scope.currentCategory && !$scope.isEditing;
     }
 
-    //when the user clicks the "new bookmark button" the is creating property is set to true, and the is editing property is set to false
+    //when the user clicks the "new bookmark button" the isCreating property is set to true, and the isEditing property is set to false
     function startCreating() {
         $scope.isCreating = true;
         $scope.isEditing = false;
@@ -59,6 +78,10 @@ angular.module ( 'Taggly', [] )
         $scope.isCreating = false;
     }
 
+    //make the above "creating" properties available to the view
+    $scope.shouldShowCreating = shouldShowCreating;
+    $scope.startCreating = startCreating;
+    $scope.cancelCreating = cancelCreating;
 
     function shouldShowEditing() {
         return $scope.isEditing && !$scope.isCreating;
@@ -76,21 +99,12 @@ angular.module ( 'Taggly', [] )
         $scope.editedBookmark = null;
     }
 
-    //make the above properties available to the view
-    $scope.shouldShowCreating = shouldShowCreating;
-    $scope.startCreating = startCreating;
-    $scope.cancelCreating = cancelCreating;
+    //make the above "editing" properties available to the view
     $scope.shouldShowEditing = shouldShowEditing;
     $scope.startEditing = startEditing;
     $scope.cancelEditing = cancelEditing;
 
-    function resetCreateForm() {
-        $scope.newBookmark = {
-            title: '',
-            url: '',
-            category: $scope.currentCategory.name
-        };
-    }
+
     //-------------------------------------------------------------------------------------------------
     // CRUD
     //-------------------------------------------------------------------------------------------------
@@ -100,5 +114,16 @@ angular.module ( 'Taggly', [] )
 
         resetCreateForm();
     }
+
+    function updateBookmark(bookmark){
+        var index = _.findIndex($scope.bookmarks, function(b){
+            return b.id == bookmark.id
+        })
+        $scope.bookmarks[index] = bookmark
+        $scope.editedbookmark = null
+        $scope.isEditing = false
+    }
+
     $scope.createBookmark = createBookmark;
-} )
+    $scope.updateBookmark = updateBookmark
+})
