@@ -124,6 +124,14 @@ angular.module ( 'Taggly', [] )
         $scope.isEditing = false
     }
 
-    $scope.createBookmark = createBookmark;
+    $scope.createBookmark = createBookmark
     $scope.updateBookmark = updateBookmark
+
+    function deleteBookmark(bookmark){
+        _.remove($scope.bookmarks, function (b){
+            return b.id == bookmark.id
+        })
+    }
+
+    $scope.deleteBookmark = deleteBookmark
 })
