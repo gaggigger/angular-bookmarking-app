@@ -1,4 +1,16 @@
-angular.module ( 'Taggly', [] )
+angular.module ( 'Taggly', [
+    'ui.router',
+    'categories',
+    'categories.bookmarks'
+] )
+    .config( function ( $stateProvider, $urlRouterProvider ){
+        $stateProvider
+            .state('taggly', {
+                url: '',
+                abstract: true
+            })
+        $urlRouterProvider.otherwise('/')
+    })
     .controller ( 'MainCtrl', function( $scope ) {
     $scope.categories = [
         { "id": 0, "name": "Development" },
